@@ -54,7 +54,7 @@ for m = 1:500;
     end 
 end;
 
-% Note we have to plot the element factpr in both planes
+% Note we have to plot the element factor in both planes
 figure;
 polar(theta, ElementPattern_HW(1,:));
 title('Figure 1: Half-Wave Dipole Element Pattern in Y-Z plane');
@@ -88,7 +88,25 @@ ArrayPatternT = ArrayPattern_HW_YZ';
 figure;
 polar(theta, ArrayPatternT(1,:));
 title('Figure 5: Half-Wave Dipole Array Pattern X-Z');
-
+%% Now let's start changing the array factor based on varying length
+close all
+clc
+% for each value of theta and delta_l calculate the new relative phase 
+A1_rp_new = zeros(500,500);
+for i = 1:500
+    for j = 1:500
+        A2_rp_new(i,j) = -1*(2*pi/lamda*d*sin(theta(i))) - l2_electrical(j);
+        A3_rp_new(i,j) = -2*(2*pi/lamda*d*sin(theta(i))) - l2_electrical(j);
+        A4_rp_new(i,j) = -3*(2*pi/lamda*d*sin(theta(i))) - l2_electrical(j);
+    end
+end
+% Calculate the new array factors as a function of theta and delta_L
+for i = 1:500
+    for j = 1:500
+        AF_pseudo_VA(i,j) = exp(1i*A1_rp_new(i,j)) + exp(1i*A2_rp_new(i,j)) + exp(1i*A3_rp_new(i,j)) + exp(1i*A4_rp_new(i,j));
+        
+    end
+end
 
 %% Question 8.2-5
 beta = 2 * pi;
