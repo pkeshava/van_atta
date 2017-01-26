@@ -6,7 +6,7 @@
 % Frequency 79 GHz
 % Transmission line length of first pair = l1
 % Transmission line length of second pair = l2
-% Element spacing = z
+% Element spacing = d
 % Assume Gain and Array factor = 1
 % Relative Phase difference calculation
     % First start with same lengths
@@ -17,66 +17,41 @@
 clear all 
 close all
 clc
+% Define angles for plotting of patterns
+theta = linspace(0,2*pi,500);
+phi = linspace(0,2*pi,500);
 % Define parameters of incident wave
 fo = 79e9;
 c = 2.99792458e8;
 lamda = 1/fo;
-theta = linspace(0,2*pi,500);
-phi = linspace(0,2*pi,500);
 d = 0.5*lamda;
-incident_phi = 2*pi/lamda*d*cos(theta);
+theta_i = linspace(0,pi,500);
+incident_phi = 2*pi/lamda*d*cos(theta_i);
 
-% Define parameters of 4 element array
-A1_relative_phase = zeros(1,500);
-A2_relative_phase = -1*incident_phi;
-A3_relative_phase = -2*incident_phi;
-A4_relative_phase = -3*incident_phi;
+% Define parameters of 4 element array based on incident phase
+phase = [zeros(1,500); -1*incident_phi; -2*incident_phi; -3*incident_phi];
 
-AF_VA = exp(1i*A1_relative_phase) + exp(1i*A2_relative_phase) + exp(1i*A3_relative_phase) + exp(1i*A4_relative_phase);
-AF_VA_mag = abs(AF_VA)/4;
+%%%%%%%%%%
 
-for m = 1:500;
-    for n = 1:500;
-        ElementPattern_HW(m,n) = cos(pi/2*sin(theta(m))*cos(phi(n))) / sqrt((1 - (sin(theta(m))^2*cos(phi(n))^2)));
-    end 
-end;
+% These lines of code below are a little bit useless but they demostrate an
+% interesting concept which is it shows that the array factor is actually
+% indpendent of the actual phase value but rather dependent on the
+% difference in relative phases. I've essentially shown that a van atta
+% array is a van atta array
 
-% Note we have to plot the element factor in both planes
-% Note we are postly interested in YZ (H) plane
+    % for m = 1:500       % For every value of theta
+    %     for n = 1:500   % For every value of incident phi
+    %         AF_VA(m,n) = exp(1i*phase(1,n)) + exp(1i*phase(2,n)) + exp(1i*phase(2,n)) + exp(1i*phase(3,n));
+    %     end
+    % end
+    
+%%%%%%%%%% 
 
-figure;
-polar(theta, ElementPattern_HW(1,:));
-title('Figure 1: Half-Wave Dipole Element Pattern in Y-Z plane');
+% REMEMBER I'm supposed to be thinking of an array of arrays as well!!!
+% Let's handle this now
 
-ElementPatternT = ElementPattern_HW';
-figure;
-polar(theta, ElementPatternT(1,:));
-title('Figure 2: Half-Wave Dipole Element Pattern in X-Z plane');
 
-% Plot Array Pattern
-ArrayPattern_HW = zeros(1,500);
-%ArrayPattern for X-Z
-for m = 1:500;
-    for n = 1:500;
-        ArrayPattern_HW(m,n) = ElementPattern_HW(m,n) * AF_VA(n);
-    end 
-end;
 
-%ArrayPattern for Y-Z
-for m = 1:500;
-    for n = 1:500;
-        ArrayPattern_HW_YZ(m,n) = ElementPattern_HW(m,n) * AF_VA(m);
-    end 
-end;
-
-figure;
-polar(theta, ArrayPattern_HW(1,:));
-title('Figure 4: Half-Wave Dipole Array Pattern E');
-
-ArrayPatternT = ArrayPattern_HW_YZ';
-figure;
-polar(theta, ArrayPatternT(1,:));
-title('Figure 5: Half-Wave Dipole Array Pattern H');
 %% Now let's start changing the array factor based on varying delta_phi
     % I've proven using hand calculations that we can compensate each element
     % in subarrays of Van Atta Arrays to create a larger retrodirective array
@@ -154,3 +129,5 @@ for d = delta_AF
 end
 
 hold off
+%% Now I have to correct some stuff... I don't think theta incident 
+% and theta for the plot should be the same variable... 
