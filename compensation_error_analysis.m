@@ -28,7 +28,7 @@ N = 4;                                                      % Number of elements
 
 %% Prior to compensating analysis
 % Plot AF for each array
-% Plot total AF
+% Plot total AF assuming van atta
 close all
 clc
 for n = 0:N*M-1
@@ -45,6 +45,18 @@ AF_element3 = sum(AF_values(9:12,:));
 AF_element4 = sum(AF_values(13:16,:));
 figure(1)
 polar(theta, AF_total);
+%% 
+close all 
+clc
+for n = 0:N*M-1
+    for i = 1:size(theta,2)
+        i_phi(n+1,i) = n*2*pi/lamda*d*cos(theta(i));
+    end
+end
+% Now I need to split i_phi in a cell with MxN elements each with
+% size(theta) entries
+[i_phi_sub] = elementphases(M,N,theta,i_phi);
+
 
 %%
 AF_total = [AF_element1; AF_element2; AF_element3; AF_element4];
