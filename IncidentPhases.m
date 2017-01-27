@@ -1,4 +1,4 @@
-function [i_phi_sub] = elementphases(M,N,theta,i_phi)
+function [i_phi] = IncidentPhases(M,N,theta,lamda,d)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This function takes a matrix that has all the relative phases for each
 % element in a pseudo van atta array with M subarrays each with N elements
@@ -13,7 +13,9 @@ function [i_phi_sub] = elementphases(M,N,theta,i_phi)
 %       theta
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-A = repmat(N,M);
-A = A(:,2)';
-i_phi_sub = mat2cell(i_phi,A,size(theta,2));
+for n = 0:N*M-1
+    for i = 1:size(theta,2)
+        i_phi(n+1,i) = n*2*pi/lamda*d*cos(theta(i));
+    end
+end
 end

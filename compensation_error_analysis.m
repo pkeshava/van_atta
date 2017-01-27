@@ -16,69 +16,22 @@ c = 2.99792458e8;                                           % frequency of
 lamda = c/fo;                                               % free space wavelength
 d = 0.8*lamda;                                              % element seperation
 theta_i = pi/4;                                             % incident angle on array
-%i_phi = 2*pi/lamda*d*cos(theta);                            % relative incident phases
 M = 4;                                                      % Number of subarray
 N = 4;                                                      % Number of elements per sub array
-% for every elemt
-
-%delta_phi_1 = N*(M-1)*i_phi;                                % Compensation values for farthest array
-%delta_phi = linspace(N*i_phi,delta_phi_1,M/2);              % Vector of compensation values for each subarray  
-%i_phi_vector = 0:-i_phi:-(M*N-1)*i_phi;                     % relative incident phases for all elements
-%i_phi_vector = wrapTo2Pi(i_phi_vector);                         % normalize to 2*pi rad 
+%delta_phi_1 = N*(M-1)*i_phi;                               % Compensation values for farthest array
+%delta_phi = linspace(N*i_phi,delta_phi_1,M/2);             % Vector of compensation values for each subarray  
+%i_phi_vector = 0:-i_phi:-(M*N-1)*i_phi;                    % relative incident phases for all elements
 
 %% Prior to compensating analysis
 % Plot AF for each array
 % Plot total AF assuming van atta
-close all
-clc
-for n = 0:N*M-1
-    for i = 1:size(theta,2)
-        AF_values(n+1,i) = exp(-1i*n*2*pi/lamda*d*cos(theta(i)));
-    end
-end
-
-%AF_values_mag = abs(AF_values);
-AF_total = sum(AF_values(1:16,:));
-AF_element1 = sum(AF_values(1:4,:));
-AF_element2 = sum(AF_values(5:8,:));
-AF_element3 = sum(AF_values(9:12,:));
-AF_element4 = sum(AF_values(13:16,:));
-figure(1)
-polar(theta, AF_total);
-%% 
 close all 
 clc
-for n = 0:N*M-1
-    for i = 1:size(theta,2)
-        i_phi(n+1,i) = n*2*pi/lamda*d*cos(theta(i));
-    end
-end
-% Now I need to split i_phi in a cell with MxN elements each with
-% size(theta) entries
+[i_phi] = IncidentPhases(M,N,theta,lamda,d);
 [i_phi_sub] = elementphases(M,N,theta,i_phi);
-i_phi_sub1 = i_phi_sub(1);
-i_phi_sub1 = cell2mat(i_phi_sub1);
-% Calculate AF for each sub matrix
-for n = 0:N-1
-for i = 1:size(theta,2)
-    AF_1(n+1,i) = exp(-1i*i_phi_sub1(n+1,i));
-end
-end
-AF_sub1 = sum(AF_1(1:4,:));
+subAF1 = SubArrayFactor(1,N,theta,i_phi_sub);
 figure(1)
-polar(theta, AF_sub1);
-
-%%
-AF_total = [AF_element1; AF_element2; AF_element3; AF_element4];
-for i = 1:M
-    figure(1)
-    polar(theta, AF_total(i,:));
-    legend('Subarray 1','Subarray 2','Subarray 3','Subarray 4')
-    title('Figure 5: 4 Element Half-Wave Dipole Array Pattern H Plane');
-    hold on
-end
-
-hold off
+polar(theta, subAF1);
 
 %% Plot compensated total AF
 % Note the direction should be the same as array 1 but with a thinner
