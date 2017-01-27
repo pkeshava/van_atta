@@ -56,7 +56,17 @@ end
 % Now I need to split i_phi in a cell with MxN elements each with
 % size(theta) entries
 [i_phi_sub] = elementphases(M,N,theta,i_phi);
-
+i_phi_sub1 = i_phi_sub(1);
+i_phi_sub1 = cell2mat(i_phi_sub1);
+% Calculate AF for each sub matrix
+for n = 0:N-1
+for i = 1:size(theta,2)
+    AF_1(n+1,i) = exp(-1i*i_phi_sub1(n+1,i));
+end
+end
+AF_sub1 = sum(AF_1(1:4,:));
+figure(1)
+polar(theta, AF_sub1);
 
 %%
 AF_total = [AF_element1; AF_element2; AF_element3; AF_element4];
