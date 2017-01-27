@@ -8,8 +8,7 @@ clear all
 close all
 clc
 % Define angles for plotting of patterns
-theta = linspace(0,2*pi,500);
-phi = linspace(0,2*pi,500);
+theta = linspace(0,2*pi,5000);
 % Define parameters of incident wave
 fo = 79e9;
 c = 2.99792458e8;                                           % frequency of 
@@ -22,17 +21,24 @@ N = 4;                                                      % Number of elements
 %delta_phi = linspace(N*i_phi,delta_phi_1,M/2);             % Vector of compensation values for each subarray  
 %i_phi_vector = 0:-i_phi:-(M*N-1)*i_phi;                    % relative incident phases for all elements
 
-%% Prior to compensating analysis
-% Plot AF for each array
-% Plot total AF assuming van atta
+%% Prior to compensating analysis: Plot AF for each array
 close all 
 clc
-[i_phi] = IncidentPhases(M,N,theta,lamda,d);
-[i_phi_sub] = elementphases(M,N,theta,i_phi);
-subAF1 = SubArrayFactor(1,N,theta,i_phi_sub);
-figure(1)
-polar(theta, subAF1);
+[i_phi] = IncidentPhases(M,N,theta,lamda,d);    % calculate incident phases for all elements
+[i_phi_sub] = elementphases(M,N,theta,i_phi);   % segment results into appropriate cells of subarrays
 
+for i = 1:M
+figure;
+subAFi = SubArrayFactor(i,N,theta,i_phi_sub);   % calculate AF for subarray indicated by index                                       
+polar(theta, subAFi);
+title(['Array Factor for Sub-Array ' num2str(i) ' of' num2str(M)]);
+end
+%% Prior to compensating analysis: Plot total AF Assuming CorrectVan Atta Compensation
+[i_phi] = IncidentPhases(M,N,theta,lamda,d);
+AF_T = TotalArrayFactor(N,M,theta,i_phi);
+figure;
+polar(theta, AF_T);
+title(['Total Array Factor of ' num2str(M) ' Sub Van Atta Arrays Containing ' num2str(N) ' Elements and Correctly Compensation']);
 %% Plot compensated total AF
 % Note the direction should be the same as array 1 but with a thinner
 % beamwidth

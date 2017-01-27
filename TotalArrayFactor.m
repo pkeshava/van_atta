@@ -1,4 +1,4 @@
-function [subAF] = SubArrayFactor(i,N,theta,i_phi_sub)
+function [AF_T] = TotalArrayFactor(N,M,theta,i_phi)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This function takes the cell created by elementphases.m and calculates
 % the array factor specified by the index i
@@ -11,12 +11,11 @@ function [subAF] = SubArrayFactor(i,N,theta,i_phi_sub)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-i_phi_subi = i_phi_sub(i);
-i_phi_subi = cell2mat(i_phi_subi);
-for n = 0:N-1
+
+for n = 0:M*N-1 
     for i = 1:size(theta,2)
-        subAF(n+1,i) = exp(-1i*i_phi_subi(n+1,i));
+        AF_T(n+1,i) = exp(-1i*i_phi(n+1,i));
     end
 end
-subAF = sum(subAF(1:N,:))/N;
+AF_T = sum(AF_T(1:M*N,:))/(N*M);
 end
