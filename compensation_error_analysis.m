@@ -32,7 +32,7 @@ for i = 1:M
     polar(theta, subAFi);
     title(['Array Factor for Sub-Array ' num2str(i) ' of' num2str(M)]);
 end
-%% Prior to compensating analysis: Plot total AF Assuming CorrectVan Atta Compensation
+%% Prior to compensating analysis: Plot total AF Assuming Correct Van Atta Compensation
 [i_phi] = IncidentPhases(M,N,theta,lamda,d);
 [AF_T] = TotalArrayFactor(N,M,theta,i_phi);
 figure;
@@ -40,11 +40,9 @@ polar(theta, AF_T);
 title(['Total Array Factor of ' num2str(M) ' Sub Van Atta Arrays Containing ' num2str(N) ' Elements and Correctly Compensation']);
 %% COMPENSATION ERROR ANALYSIS
 % Need to design scrambling algorithm for i_phi
-[i_phi] = IncidentPhases(M,N,theta,lamda,d);    % calculate incident phases for all elements
-[i_phi_sub] = elementphases(M,N,theta,i_phi);   % segment results into appropriate cells of subarrays
-i_phi1 = cell2mat(i_phi_sub(1));
-i_phi1_temp = flipud(i_phi1);                   % flips relative phases of elements within array to transmit element i.e. simulating Van Atta behaviour 
+clc
 
+[i_phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
 
 %% Plot compensated total AF vs Different error values
 delta_phi_e = 0.3*i_phi;                                    % relative error in compensation.. picked semi arbitraly
