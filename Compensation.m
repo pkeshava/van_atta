@@ -1,4 +1,4 @@
-function [compensation_i_phi_sub] = Compensation(M,N,theta,lamda,d)
+function [compensation_i_phi_sub] = Compensation(M,N,theta,lamda,d,error)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This function takes a matrix that has all the relative phases for each
 % element in a pseudo van atta array with M subarrays each with N elements
@@ -11,6 +11,9 @@ function [compensation_i_phi_sub] = Compensation(M,N,theta,lamda,d)
 %   i_phi: a Mx1 matrix, each row containing size(theta,2) values. Contains
 %       incident phases for each element in all subarrays at all angles of
 %       theta
+%   d: element spacing
+%   lamda: wavelength
+%   error: error for compensation in percent
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -23,6 +26,7 @@ i_phi = i_phi(2,:);
 for i = 1:M
     comp_vector(i,:) = phi_compensation_multiplier(i)*i_phi;
 end
+comp_vector = comp_vector*(1+error);
 
 [phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
 [tx_phi_sub] = elementphases(M,N,theta,phi_tx);
