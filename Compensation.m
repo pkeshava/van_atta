@@ -1,4 +1,4 @@
-function [compensated_phases] = Compensation(M,N,theta,lamda,d)
+function [compensation_i_phi_sub] = Compensation(M,N,theta,lamda,d)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This function takes a matrix that has all the relative phases for each
 % element in a pseudo van atta array with M subarrays each with N elements
@@ -17,17 +17,25 @@ function [compensated_phases] = Compensation(M,N,theta,lamda,d)
 delta_phi_1 = -N*(M-1);                              
 phi_compensation_multiplier = linspace(delta_phi_1,-N,M/2);
 phi_compensation_multiplier = [phi_compensation_multiplier -fliplr(phi_compensation_multiplier)];
+[i_phi] = IncidentPhases(M,N,theta,lamda,d);
+i_phi = i_phi(2,:);
+
+for i = 1:M
+    comp_vector(i,:) = phi_compensation_multiplier(i)*i_phi;
+end
 
 [phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
-[i_phi] = IncidentPhases(M,N,theta,lamda,d);    % calculate incident phases for all elements
-[i_phi_sub] = elementphases(M,N,theta,i_phi);
+%[i_phi] = IncidentPhases(M,N,theta,lamda,d);    % calculate incident phases for all elements
+[tx_phi_sub] = elementphases(M,N,theta,phi_tx);
 
 compensation_i_phi_sub = [];
 for i = 1:M
-   sub_array_i = cell2mat(i_phi_sub(i));
-   compensation_i_phi_temp = phi_compensation_multiplier(i)*sub_array_i;
-   compensation_i_phi_sub = [compensation_i_phi_sub; compensation_i_phi_temp];
+    sub_array_i = cell2mat(tx_phi_sub(i)); %select subarray
+    for j = 1:N
+       sub_array_i(j,:) = sub_array_i(j,:) + comp_vector(i,:);
+    end
+    compensation_i_phi_sub = [compensation_i_phi_sub; sub_array_i];
 end
 
-compensated_phases = compensation_i_phi_sub + phi_tx;
+%compensated_phases = compensation_i_phi_sub + phi_tx;
 end

@@ -44,8 +44,12 @@ clc
 [phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
 % Calculate compensation vector
 %%
+clc
 [compensated_phases] = Compensation(M,N,theta,lamda,d);
-
+[AF_c] = TotalArrayFactor(N,M,theta,compensated_phases);
+figure;
+polar(theta, AF_c);
+title(['Total Array Factor of ' num2str(M) ' Sub Van Atta Arrays Containing ' num2str(N) ' Elements and Correctly Compensation']);
 %% Plot compensated total AF vs Different error values
 
 
