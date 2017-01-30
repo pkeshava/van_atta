@@ -8,7 +8,7 @@ function [i_phi_sub] = elementphases(M,N,theta,i_phi)
 %   M: number of subarrays
 %   N: number of elements in subarray
 %   theta: vector of angles (size defines resolution of plot)
-%   i_phi: a 4x1 cell, each cell containing size(theta,2) values. Contains
+%   i_phi: a Mx1 matrix, each row containing size(theta,2) values. Contains
 %       incident phases for each element in all subarrays at all angles of
 %       theta
 %

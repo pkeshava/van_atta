@@ -6,12 +6,12 @@ function [phi_tx] = RxToTxPhase(N,M,theta,lamda,d)
 % the next step which is to simulate beam parameters withr respect to 
 % compensation error
 %
-%   i: index of the subarray chosen for phase scrambling
 %   M: Number of subarrays
 %   N: number of elements in subarray
 %   theta: vector of angles (size defines resolution of plot)
 %   lamda: free space wavelength
 %   d: element spacing in wavelengths
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [i_phi] = IncidentPhases(M,N,theta,lamda,d);    % calculate incident phases for all elements
 [i_phi_sub] = elementphases(M,N,theta,i_phi);   % segment results into appropriate cells of subarrays

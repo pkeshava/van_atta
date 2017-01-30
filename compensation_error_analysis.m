@@ -39,13 +39,14 @@ figure;
 polar(theta, AF_T);
 title(['Total Array Factor of ' num2str(M) ' Sub Van Atta Arrays Containing ' num2str(N) ' Elements and Correctly Compensation']);
 %% COMPENSATION ERROR ANALYSIS
-% Need to design scrambling algorithm for i_phi
 clc
-
-[i_phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
+% Need to design scrambling algorithm for i_phi
+[phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
+% Calculate compensation vector
+%%
+[compensated_phases] = Compensation(M,N,theta,lamda,d);
 
 %% Plot compensated total AF vs Different error values
-delta_phi_e = 0.3*i_phi;                                    % relative error in compensation.. picked semi arbitraly
 
 
 
