@@ -13,7 +13,7 @@ function [phi_tx] = RxToTxPhase(N,M,theta,lamda,d)
 %   d: element spacing in wavelengths
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[i_phi] = IncidentPhases(M,N,theta,lamda,d);    % calculate incident phases for all elements
+[i_phi] = -IncidentPhases(M,N,theta,lamda,d);    % calculate incident phases for all elements
 [i_phi_sub] = elementphases(M,N,theta,i_phi);   % segment results into appropriate cells of subarrays
 phi_tx = [];
 for i = 1:M
