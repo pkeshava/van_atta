@@ -15,8 +15,8 @@ c = 2.99792458e8;                                           % frequency of
 lamda = c/fo;                                               % free space wavelength
 d = 0.8*lamda;                                              % element seperation
 theta_i = pi/4;                                             % incident angle on array
-M = 4;                                                      % Number of subarray
-N = 4;                                                      % Number of elements per sub array
+M = 6;                                                      % Number of subarray
+N = 2;                                                      % Number of elements per sub array
 %delta_phi_1 = N*(M-1)*i_phi;                               % Compensation values for farthest array
 %delta_phi = linspace(N*i_phi,delta_phi_1,M/2);             % Vector of compensation values for each subarray  
 %i_phi_vector = 0:-i_phi:-(M*N-1)*i_phi;                    % relative incident phases for all elements
@@ -32,24 +32,28 @@ for i = 1:M
     polar(theta, subAFi);
     title(['Array Factor for Sub-Array ' num2str(i) ' of' num2str(M)]);
 end
-%% Prior to compensating analysis: Plot total AF Assuming Correct Van Atta Compensation
+%% Prior to compensating analysis: Plot total AF Assuming Correct Van Atta Compensation ie using linear excitation
 [i_phi] = IncidentPhases(M,N,theta,lamda,d);
 [AF_T] = TotalArrayFactor(N,M,theta,i_phi);
 figure;
 polar(theta, AF_T);
 title(['Total Array Factor of ' num2str(M) ' Sub Van Atta Arrays Containing ' num2str(N) ' Elements and Correctly Compensation']);
-%% COMPENSATION ERROR ANALYSIS
+%% COMPENSATION ANALYSIS
+% First rearrange phases correctly to simulate Van Atta behaviour then use
+% compensation algorithm 
 clc
-% Need to design scrambling algorithm for i_phi
-[phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
-% Calculate compensation vector
-%%
-clc
+% Need to design scrambling algorithm for i_phi: [phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
 [compensated_phases] = Compensation(M,N,theta,lamda,d);
+% Plot
 [AF_c] = TotalArrayFactor(N,M,theta,compensated_phases);
 figure;
 polar(theta, AF_c);
 title(['Total Array Factor of ' num2str(M) ' Sub Van Atta Arrays Containing ' num2str(N) ' Elements and Correctly Compensation']);
+%% COMPENSATION ERROR ANALYSIS
+% Let's start approaching this by doing it as a percentage in compensation
+% error
+
+
 %% Plot compensated total AF vs Different error values
 
 

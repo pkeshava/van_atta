@@ -25,9 +25,7 @@ for i = 1:M
 end
 
 [phi_tx] = RxToTxPhase(N,M,theta,lamda,d);
-%[i_phi] = IncidentPhases(M,N,theta,lamda,d);    % calculate incident phases for all elements
 [tx_phi_sub] = elementphases(M,N,theta,phi_tx);
-
 compensation_i_phi_sub = [];
 for i = 1:M
     sub_array_i = cell2mat(tx_phi_sub(i)); %select subarray
