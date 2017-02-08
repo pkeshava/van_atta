@@ -62,7 +62,16 @@ figure;
 polar(theta, AF_c);
 title(['Array Factor of ' num2str(M) ' Van Atta Sub-Arrays Containing ' num2str(N) ' Elements and With ' num2str(error_percent*100) '% Error In Compensation Vector']);
 
-%% Plot compensated total AF vs Different error values
+%% COMPENSATING AS FRACTION OF PHI - ERROR ANALYSIS
+
+% Basically capable of shifting with some sort of resolution
+% Define resolution variable in degrees, convert to radians
+phase_shift_resolution = 10;
+phase_shift_resolution = phase_shift_resolution*pi/180;
+error_percent = 0.50;
+[compensated_phases] = Compensation(M,N,theta,lamda,d,error_percent, phase_shift_resolution);
+
+% Round the required correction to the closest bin defined by resolution
 
 
 
