@@ -74,7 +74,7 @@ error_percent = 0.50;
 % Round the required correction to the closest bin defined by resolution
 
 
-
+%% Plot array factor of pre-phased arrays
 
 
 
